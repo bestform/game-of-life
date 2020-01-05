@@ -1,14 +1,14 @@
 import React from "react";
 
-class Cell extends React.Component {
-  props = {
-    value: 0,
-    index: 0,
-    rowBeginning: false,
-    firstRow: false,
-    update: function(ind: number) {}
-  };
+type props = {
+  value: number;
+  index: number;
+  rowBeginning: boolean;
+  firstRow: boolean;
+  update: (ind: number) => void;
+};
 
+class Cell extends React.Component<props> {
   getClassName = () => {
     return "cell" + this.props.value;
   };
