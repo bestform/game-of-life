@@ -5,6 +5,7 @@ class Cell extends React.Component {
     value: 0,
     index: 0,
     rowBeginning: false,
+    firstRow: false,
     update: function(ind: number) {}
   };
 
@@ -16,7 +17,11 @@ class Cell extends React.Component {
     const styles = {
       width: "20px",
       height: "20px",
-      border: "1px solid #cccccc",
+      borderRight: "1px solid #26a69a",
+      borderBottom: "1px solid #26a69a",
+      borderTop: this.props.firstRow ? "1px solid #26a69a" : "",
+      borderLeft: this.props.rowBeginning ? "1px solid #26a69a" : "",
+      borderCollapse: "collapse" as const,
       float: "left" as const,
       backgroundColor: this.props.value === 0 ? "#ffffff" : "#000000",
       clear: this.props.rowBeginning ? ("both" as const) : ("none" as const)

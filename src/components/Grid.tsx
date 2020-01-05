@@ -66,19 +66,47 @@ class Grid extends React.Component {
   render = () => {
     return (
       <>
-        <button onClick={() => this.init(false)}>Clear</button>
-        <button onClick={() => this.init(true)}>Random</button>
-        <button onClick={this.iterate}>Iterate</button>
-        <button onClick={this.run}>
-          {this.state.running ? "Stop" : "Run"}
-        </button>
-        <div>
+        <div className="col s3 right-align">
+          <button
+            className="waves-effect waves-light btn"
+            onClick={() => this.init(false)}
+          >
+            Clear
+          </button>
+          <br />
+          <br />
+          <button
+            className="waves-effect waves-light btn"
+            onClick={() => this.init(true)}
+          >
+            Random
+          </button>
+          <br />
+          <br />
+          <button
+            className="waves-effect waves-light btn"
+            onClick={this.iterate}
+          >
+            Iterate
+          </button>
+          <br />
+          <br />
+          <button
+            className="waves-effect waves-light btn red"
+            onClick={this.run}
+          >
+            {this.state.running ? "Stop" : "Run"}
+          </button>
+        </div>
+
+        <div className="col s9">
           {this.state.cells.map((val, ind) => (
             <Cell
               key={ind}
               value={val}
               index={ind}
               rowBeginning={ind % this.state.width === 0}
+              firstRow={ind < this.state.width}
               update={this.updateCell}
             />
           ))}
