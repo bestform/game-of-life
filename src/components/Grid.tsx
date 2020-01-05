@@ -10,6 +10,8 @@ class Grid extends React.Component {
     running: false
   };
 
+  mouseIsDown: boolean = false;
+
   to: NodeJS.Timeout | undefined = undefined;
 
   init = (random: boolean) => {
@@ -39,6 +41,12 @@ class Grid extends React.Component {
     });
 
     this.setState({ cells: newCells });
+  };
+
+  updateCellEnter = (ind: number) => {
+    if (this.mouseIsDown) {
+      if (this.state.cells[ind] === 0) this.updateCell(ind);
+    }
   };
 
   run = () => {
@@ -99,7 +107,11 @@ class Grid extends React.Component {
           </button>
         </div>
 
-        <div className="col s9">
+        <div
+          className="col s9"
+          onMouseUp={() => (this.mouseIsDown = false)}
+          onMouseDown={() => (this.mouseIsDown = true)}
+        >
           {this.state.cells.map((val, ind) => (
             <Cell
               key={ind}
@@ -108,6 +120,7 @@ class Grid extends React.Component {
               rowBeginning={ind % this.state.width === 0}
               firstRow={ind < this.state.width}
               update={this.updateCell}
+              updateEnter={this.updateCellEnter}
             />
           ))}
         </div>

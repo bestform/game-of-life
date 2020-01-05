@@ -6,6 +6,7 @@ type props = {
   rowBeginning: boolean;
   firstRow: boolean;
   update: (ind: number) => void;
+  updateEnter: (ind: number) => void;
 };
 
 class Cell extends React.Component<props> {
@@ -35,8 +36,11 @@ class Cell extends React.Component<props> {
       <div
         style={this.getStyles()}
         className={this.getClassName()}
-        onClick={() => {
+        onMouseDown={() => {
           this.props.update(this.props.index);
+        }}
+        onMouseEnter={() => {
+          this.props.updateEnter(this.props.index);
         }}
       ></div>
     );
