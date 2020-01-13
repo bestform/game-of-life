@@ -1,74 +1,30 @@
 import React from "react";
 import Cell from "./Cell";
 import { iterate } from "../lib/gridCalc";
+import GridData from "../lib/gridData";
 
-class Grid extends React.Component {
+interface GridProps {
+  saveHandler: () => void;
+  clearHandler: () => void;
+  grid: GridData;
+  iterateHandler: () => void;
+  randomHandler: () => void;
+  updateCellHandler: (ind: number) => void;
+  runHandler: () => void;
+  running: boolean;
+}
+
+class Grid extends React.Component<GridProps> {
   state = {
-    width: 30,
-    height: 30,
-    cells: [],
     running: false
   };
 
   mouseIsDown: boolean = false;
 
-  to: NodeJS.Timeout | undefined = undefined;
-
-  init = (random: boolean) => {
-    const cells = [];
-    for (let y = 0; y < this.state.height; y++) {
-      for (let x = 0; x < this.state.width; x++) {
-        cells[x + y * this.state.width] = random
-          ? Math.floor(Math.random() * 10) % 2
-          : 0;
-      }
-    }
-
-    this.setState({ cells });
-  };
-
-  componentDidMount = () => {
-    this.init(false);
-  };
-
-  updateCell = (ind: number) => {
-    const newCells = this.state.cells.map((val, index) => {
-      if (index === ind) {
-        return val === 1 ? 0 : 1;
-      }
-
-      return val;
-    });
-
-    this.setState({ cells: newCells });
-  };
-
   updateCellEnter = (ind: number) => {
     if (this.mouseIsDown) {
-      if (this.state.cells[ind] === 0) this.updateCell(ind);
+      if (this.props.grid.cells[ind] === 0) this.props.updateCellHandler(ind);
     }
-  };
-
-  run = () => {
-    const running = !this.state.running;
-
-    if (running) {
-      this.to = setInterval(this.iterate, 200);
-    } else {
-      clearInterval(this.to as NodeJS.Timer);
-    }
-
-    this.setState({ running });
-  };
-
-  iterate = () => {
-    const newCells = iterate(
-      this.state.width,
-      this.state.height,
-      this.state.cells
-    );
-
-    this.setState({ cells: newCells });
   };
 
   render = () => {
@@ -77,7 +33,7 @@ class Grid extends React.Component {
         <div className="col s3 right-align">
           <button
             className="waves-effect waves-light btn"
-            onClick={() => this.init(false)}
+            onClick={this.props.clearHandler}
           >
             Clear
           </button>
@@ -85,25 +41,36 @@ class Grid extends React.Component {
           <br />
           <button
             className="waves-effect waves-light btn"
-            onClick={() => this.init(true)}
+            onClick={this.props.randomHandler}
           >
             Random
           </button>
           <br />
           <br />
           <button
+            className="waves-effect waves-light btn green"
+            onClick={this.props.saveHandler}
+          >
+            Save to Library
+          </button>
+          <br />
+          <br />
+          <br />
+          <br />
+          <button
             className="waves-effect waves-light btn"
-            onClick={this.iterate}
+            onClick={this.props.iterateHandler}
           >
             Iterate
           </button>
+
           <br />
           <br />
           <button
             className="waves-effect waves-light btn red"
-            onClick={this.run}
+            onClick={this.props.runHandler}
           >
-            {this.state.running ? "Stop" : "Run"}
+            {this.props.running ? "Stop" : "Run"}
           </button>
         </div>
 
@@ -112,14 +79,14 @@ class Grid extends React.Component {
           onMouseUp={() => (this.mouseIsDown = false)}
           onMouseDown={() => (this.mouseIsDown = true)}
         >
-          {this.state.cells.map((val, ind) => (
+          {this.props.grid.cells.map((val, ind) => (
             <Cell
               key={ind}
               value={val}
               index={ind}
-              rowBeginning={ind % this.state.width === 0}
-              firstRow={ind < this.state.width}
-              update={this.updateCell}
+              rowBeginning={ind % this.props.grid.width === 0}
+              firstRow={ind < this.props.grid.width}
+              update={this.props.updateCellHandler}
               updateEnter={this.updateCellEnter}
             />
           ))}
